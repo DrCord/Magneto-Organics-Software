@@ -2,14 +2,14 @@
  *  Magneto Organics Electromagnetic Particle Controller Software
  *  For controlling 4 electromagnetic coils
  *  By Cord Slatton-Valle
- *  Version 0.2.0
+ *  Version 0.2.1
  */
 int numInput = 5;                          //number of input channels
 int numOutput = 4;                            //number of output channels
 int switchPins[5] = {2, 3, 4, 5, 6};       // switches connected to pins 2-6
 int switchRead;                            // for reading switch status, HIGH == Depressed == On
 int switchReadVerify;                      // for reading the delayed/debounced status
-int buttonState[6];                        // holds each button state
+int buttonState[5];                        // holds each button state
 int isRunning = 0;                         // is the machine running a pattern?
 int pulseLength = 1000;                    // pulse length in milliseconds
 int pulsePins[5] = {8, 9, 10, 11, 12}; // output pulses connected to pins 8-12
@@ -22,7 +22,7 @@ void setup() {
   }
   for(int i=0; i < numOutput; i++){
     pinMode(pulsePins[i], OUTPUT);          // Set the pulse pins as outputs
-    digitalWrite(pulsePins[i], LOW);        // initialize all pulsePins to off
+    //digitalWrite(pulsePins[i], LOW);        // initialize all pulsePins to off
   }
   pinMode(readLED, OUTPUT);                 //set onboard led as output
   digitalWrite(readLED, LOW);                //make sure LED is off to start
@@ -31,6 +31,7 @@ void setup() {
   }
   Serial.begin(9600);                       // Set up serial communication at 9600bps
   Serial.println("Serial Initialized.");
+  delay(1000);
 }
 
 void loop(){
@@ -88,9 +89,9 @@ void loop(){
 int outputSinglePulse(int pin){  
   Serial.print("Pulsing pin #");
   Serial.println(pin);
-  digitalWrite(pulsePins[pin], HIGH);
+  digitalWrite(pin, HIGH);
   delay(pulseLength);
-  digitalWrite(pulsePins[pin], LOW);
+  digitalWrite(pin, LOW);
 }
 
 void outputPulsePattern(){
