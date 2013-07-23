@@ -4,6 +4,17 @@
  *  By Cord Slatton-Valle
  *  Version 0.2.1
  */
+<<<<<<< HEAD
+ 
+int switchRun = 2;
+int switchMode[3] = {3, 4, 5};
+int currentMode;
+int isRunning;                        // is the machine running a pattern?
+int pulseLength;                    // pulse length in milliseconds
+int pulsePins[4] = {8, 9, 10, 11}; // output pulses connected to pins 8-11
+int runLED = 13;
+int numOutput = 4;
+=======
 int numInput = 5;                          //number of input channels
 int numOutput = 4;                            //number of output channels
 int switchPins[5] = {2, 3, 4, 5, 6};       // switches connected to pins 2-6
@@ -14,76 +25,77 @@ int isRunning = 0;                         // is the machine running a pattern?
 int pulseLength = 1000;                    // pulse length in milliseconds
 int pulsePins[5] = {8, 9, 10, 11, 12}; // output pulses connected to pins 8-12
 int readLED = 13;
+>>>>>>> 528ade6fa94195f6d8d4c242ec7a0ad561a71166
 
 void setup() {
-  for(int i=0; i < numInput; i++){
-    pinMode(switchPins[i], INPUT);          // Set the switch pins as inputs
-    digitalWrite(switchPins[i], HIGH);      // turn on pullup resistors
+  pinMode(switchRun, INPUT);          // Set the switchRun as input
+    digitalWrite(switchRun, HIGH);
+  
+  for(int i=0; i < 3; i++){
+    pinMode(switchMode[i], INPUT);          // Set the switchMode pins as inputs
+    digitalWrite(switchMode[i], HIGH);      // turn on pullup resistors
   }
   for(int i=0; i < numOutput; i++){
     pinMode(pulsePins[i], OUTPUT);          // Set the pulse pins as outputs
     //digitalWrite(pulsePins[i], LOW);        // initialize all pulsePins to off
   }
-  pinMode(readLED, OUTPUT);                 //set onboard led as output
-  digitalWrite(readLED, LOW);                //make sure LED is off to start
-  for(int i=0; i < numInput; i++){
-    buttonState[i] = 0;                     // Set the initial button states as off
-  }
+  pinMode(runLED, OUTPUT);                 //set onboard led as output
+  digitalWrite(runLED, LOW);               //make sure LED is off to start
+  
+  //set the initial mode
+  currentMode = checkMode();
+  setPulse(); //set pulse length
+  
   Serial.begin(9600);                       // Set up serial communication at 9600bps
   Serial.println("Serial Initialized.");
   delay(1000);
 }
 
-void loop(){
-  //read the switches
-  digitalWrite(readLED, HIGH);
-  delay(200);
-  for(int i=0; i < numInput; i++){
-    Serial.print("switch ");
-    Serial.print(i+1);
-    Serial.println(" read");    
-    switchRead = digitalRead(switchPins[i]);           // read input value and store it in switchRead
-    delay(20);                                         // 10 milliseconds is a good amount of time
-    switchReadVerify = digitalRead(switchPins[i]);     // read the input again to check for bounces
-    if (switchRead == switchReadVerify) {              // make sure we got 2 consistant readings!
-      if (switchRead == 0) {                        // check if the button is pressed
-        //Serial.println("switchRead == 0");
-        //if (switchRead != buttonState[i]) {            // has the button state changed
-          Serial.print("Switch ");
-          Serial.print(i+1);
-          Serial.println(" triggered.");
-          buttonState[i] = 1;                          // set the switch as being triggered
-        //}
-      }
-      else{
-        buttonState[i] = 0;
-      }
-    }
-    digitalWrite(readLED, LOW);
-    Serial.print("\n");
-    delay(200);
+void loop(){  
+  //read the Run switch
+  isRunning = checkSwitch(switchRun);
+  //execute the run switch if needed
+  if(isRunning == LOW){
+    digitalWrite(runLED, HIGH);
+    outputPulsePattern();
+    digitalWrite(runLED, LOW);
   }
-  //activate each triggered switch
-  for(int j=0; j < numInput; j++){
-    Serial.print("Pulse ");
-    Serial.print(j+1);
-    Serial.println(" for loop entry");
-    // TODO: pattern switch(es) will certainly change
-    if(buttonState[j] == 1){
-      if(j != 4){                                      // not the pattern switch      
-        outputSinglePulse(pulsePins[j]);             // output pulse
-      }
-      else{
-        isRunning = 1;
-        outputPulsePattern();                         //output pulse program
-        isRunning = 0;
-      }     
-      buttonState[j] == 0;                            // set switch as not pressed
+  
+  //read the mode switch
+  currentMode = checkMode();
+  setPulse(); //set pulse length
+}
+
+
+int checkSwitch(int pin){  
+  if (digitalRead(pin) == LOW){
+      Serial.print("Switch ");
+      Serial.print(pin);
+      Serial.println(" Activated.");
+      return digitalRead(pin);
     }
-    Serial.print("\n");
+    else{
+      return HIGH;
+    }
+}
+
+int checkMode(){
+  for(int i=0; i < 3; i++){
+    return checkSwitch(switchMode[i]);
   }
-  Serial.print("\n");
-  delay(100);
+}
+void setPulse(){
+  switch (currentMode) {
+    case 3:
+      pulseLength = 500;
+      break;
+    case 4:
+      pulseLength = 750;
+      break;
+    case 5:
+      pulseLength = 1000;
+      break;
+  }
 }
 
 int outputSinglePulse(int pin){  
