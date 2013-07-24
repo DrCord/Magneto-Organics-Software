@@ -6,7 +6,7 @@
  */
  
 int switchRun = 2;
-int switchMode[3] = {3, 4, 5};
+int switchMode[3] = {3, 4, 5};        // low, medium, high
 int currentMode;
 int isRunning;                        // is the machine running a pattern?
 int pulseLength;                    // pulse length in milliseconds
@@ -16,7 +16,7 @@ int runLED = 13;
 
 void setup() {
   pinMode(switchRun, INPUT);          // Set the switchRun as input
-    digitalWrite(switchRun, HIGH);
+  digitalWrite(switchRun, HIGH);      // turn on pullup resistors
   
   for(int i=0; i < 3; i++){
     pinMode(switchMode[i], INPUT);          // Set the switchMode pins as inputs
@@ -24,14 +24,10 @@ void setup() {
   }
   for(int i=0; i < numOutput; i++){
     pinMode(pulsePins[i], OUTPUT);          // Set the pulse pins as outputs
-    //digitalWrite(pulsePins[i], LOW);        // initialize all pulsePins to off
+    digitalWrite(pulsePins[i], LOW);        // initialize all pulsePins to off
   }
   pinMode(runLED, OUTPUT);                 //set onboard led as output
   digitalWrite(runLED, LOW);               //make sure LED is off to start
-  
-  //set the initial mode
-  currentMode = checkMode();
-  setPulse(); //set pulse length
   
   Serial.begin(9600);                       // Set up serial communication at 9600bps
   Serial.println("Serial Initialized.");
@@ -39,6 +35,10 @@ void setup() {
 }
 
 void loop(){  
+  //read the mode switch
+  currentMode = checkMode();
+  //set pulse length
+  setPulse();  
   //read the Run switch
   isRunning = checkSwitch(switchRun);
   //execute the run switch if needed
@@ -47,12 +47,7 @@ void loop(){
     outputPulsePattern();
     digitalWrite(runLED, LOW);
   }
-  
-  //read the mode switch
-  currentMode = checkMode();
-  setPulse(); //set pulse length
 }
-
 
 int checkSwitch(int pin){  
   if (digitalRead(pin) == LOW){
@@ -71,6 +66,7 @@ int checkMode(){
     return checkSwitch(switchMode[i]);
   }
 }
+
 void setPulse(){
   switch (currentMode) {
     case 3:
