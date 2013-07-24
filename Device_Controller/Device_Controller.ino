@@ -43,9 +43,7 @@ void loop(){
   isRunning = checkSwitch(switchRun);
   //execute the run switch if needed
   if(isRunning == LOW){
-    digitalWrite(runLED, HIGH);
     outputPulsePattern();
-    digitalWrite(runLED, LOW);
   }
 }
 
@@ -90,9 +88,11 @@ int outputSinglePulse(int pin){
 }
 
 void outputPulsePattern(){
+  digitalWrite(runLED, HIGH);
   Serial.println("Starting pulse pattern.");
   //cycle each pulse pin
   for(int i=0; i < numOutput; i++){
     outputSinglePulse(pulsePins[i]);
   }
+  digitalWrite(runLED, LOW);
 }
