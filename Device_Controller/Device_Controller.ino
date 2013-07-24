@@ -45,6 +45,7 @@ void loop(){
   if(isRunning == LOW){
     outputPulsePattern();
   }
+  delay(1000);
 }
 
 int checkSwitch(int pin){  
@@ -60,23 +61,32 @@ int checkSwitch(int pin){
 }
 
 int checkMode(){
+  int modeCheck;
   for(int i=0; i < 3; i++){
-    return checkSwitch(switchMode[i]);
+    modeCheck = checkSwitch(switchMode[i]);
+    if (modeCheck == LOW){
+      currentMode = i;
+    }
   }
+  return currentMode;
 }
 
 void setPulse(){
   switch (currentMode) {
-    case 3:
+    case 0:
       pulseLength = 500;
       break;
-    case 4:
+    case 1:
       pulseLength = 750;
       break;
-    case 5:
+    case 2:
       pulseLength = 1000;
       break;
+    default:
+      pulseLength = 750;
   }
+  Serial.print("Pulse length set: ");
+  Serial.println(pulseLength);
 }
 
 int outputSinglePulse(int pin){  
