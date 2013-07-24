@@ -65,7 +65,7 @@ int checkMode(){
   for(int i=0; i < 3; i++){
     modeCheck = checkSwitch(switchMode[i]);
     if (modeCheck == LOW){
-      currentMode = i;
+      currentMode = i+1;
     }
   }
   return currentMode;
@@ -73,13 +73,13 @@ int checkMode(){
 
 void setPulse(){
   switch (currentMode) {
-    case 0:
+    case 1:
       pulseLength = 500;
       break;
-    case 1:
+    case 2:
       pulseLength = 750;
       break;
-    case 2:
+    case 3:
       pulseLength = 1000;
       break;
     default:
