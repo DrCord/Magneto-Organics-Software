@@ -2,7 +2,7 @@
  *  Magneto Organics Electromagnetic Particle Controller Software
  *  For controlling 4 electromagnetic coils
  *  By Cord Slatton-Valle
- *  Version 0.2.1
+ *  Version 0.3
  */
 int numInput = 5;                          //number of input channels
 int numOutput = 4;                            //number of output channels

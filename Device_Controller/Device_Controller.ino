@@ -2,9 +2,8 @@
  *  Magneto Organics Electromagnetic Particle Controller Software
  *  For controlling 4 electromagnetic coils
  *  By Cord Slatton-Valle
- *  Version 0.2.1
+ *  Version 0.3
  */
-<<<<<<< HEAD
  
 int switchRun = 2;
 int switchMode[3] = {3, 4, 5};
@@ -12,20 +11,8 @@ int currentMode;
 int isRunning;                        // is the machine running a pattern?
 int pulseLength;                    // pulse length in milliseconds
 int pulsePins[4] = {8, 9, 10, 11}; // output pulses connected to pins 8-11
-int runLED = 13;
 int numOutput = 4;
-=======
-int numInput = 5;                          //number of input channels
-int numOutput = 4;                            //number of output channels
-int switchPins[5] = {2, 3, 4, 5, 6};       // switches connected to pins 2-6
-int switchRead;                            // for reading switch status, HIGH == Depressed == On
-int switchReadVerify;                      // for reading the delayed/debounced status
-int buttonState[5];                        // holds each button state
-int isRunning = 0;                         // is the machine running a pattern?
-int pulseLength = 1000;                    // pulse length in milliseconds
-int pulsePins[5] = {8, 9, 10, 11, 12}; // output pulses connected to pins 8-12
-int readLED = 13;
->>>>>>> 528ade6fa94195f6d8d4c242ec7a0ad561a71166
+int runLED = 13;
 
 void setup() {
   pinMode(switchRun, INPUT);          // Set the switchRun as input
