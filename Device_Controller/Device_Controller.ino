@@ -5,20 +5,22 @@
  *  Version 0.3
  */
  
-int switchRun = 2;
-int switchMode[3] = {3, 4, 5};        // low, medium, high
-int currentMode;
+int switchRun = 2;                     // on/off switch on pin 2
+int switchMode[2] = {3, 5};            // low == 3, medium == 4 or != 3 && != 5, high == 5
+int currentMode;                      // track currently set mode
 int isRunning;                        // is the machine running a pattern?
 int pulseLength;                    // pulse length in milliseconds
 int pulsePins[4] = {8, 9, 10, 11}; // output pulses connected to pins 8-11
 int numOutput = 4;
 int runLED = 13;
+int trimPotPin = A0;                    //adjustment for timing
+int trimPotValue = 0;                //stores adjustment value
 
 void setup() {
   pinMode(switchRun, INPUT);          // Set the switchRun as input
   digitalWrite(switchRun, HIGH);      // turn on pullup resistors
   
-  for(int i=0; i < 3; i++){
+  for(int i=0; i < 2; i++){
     pinMode(switchMode[i], INPUT);          // Set the switchMode pins as inputs
     digitalWrite(switchMode[i], HIGH);      // turn on pullup resistors
   }
@@ -37,6 +39,8 @@ void setup() {
 void loop(){  
   //read the mode switch
   currentMode = checkMode();
+  //read the adjuster
+  //readTrimPot();
   //set pulse length
   setPulse();  
   //read the Run switch
@@ -61,32 +65,46 @@ int checkSwitch(int pin){
 }
 
 int checkMode(){
-  int modeCheck;
-  for(int i=0; i < 3; i++){
+  int modeCheck = HIGH;
+  for(int i=0; i < 2; i++){
     modeCheck = checkSwitch(switchMode[i]);
     if (modeCheck == LOW){
-      currentMode = i+1;
+      currentMode = switchMode[i];
+      return currentMode;
     }
+  }
+  if(modeCheck == HIGH){
+    currentMode = 4; //set medium if neither low/high are set
   }
   return currentMode;
 }
 
 void setPulse(){
+  Serial.print("currentMode: ");
+  Serial.println(currentMode);
   switch (currentMode) {
-    case 1:
+    case 3:
       pulseLength = 500;
       break;
-    case 2:
+    case 4:
       pulseLength = 750;
       break;
-    case 3:
+    case 5:
       pulseLength = 1000;
       break;
     default:
       pulseLength = 750;
   }
+  pulseLength += trimPotValue;
   Serial.print("Pulse length set: ");
   Serial.println(pulseLength);
+}
+
+int readTrimPot(){
+  trimPotValue = analogRead(trimPotPin);
+  Serial.print("Trim Pot Value: ");
+  Serial.println(trimPotValue);
+  return trimPotValue;
 }
 
 int outputSinglePulse(int pin){  
