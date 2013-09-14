@@ -49,7 +49,7 @@ void loop(){
   if(isRunning == LOW){
     outputPulsePattern();
   }
-  delay(1000);
+  //delay(1000); //in actual use we don't want a delay
 }
 
 int checkSwitch(int pin){  
@@ -84,16 +84,16 @@ void setPulse(){
   Serial.println(currentMode);
   switch (currentMode) {
     case 3:
-      pulseLength = 500;
+      pulseLength = 300;
       break;
     case 4:
-      pulseLength = 750;
+      pulseLength = 500;
       break;
     case 5:
-      pulseLength = 1000;
+      pulseLength = 700;
       break;
     default:
-      pulseLength = 750;
+      pulseLength = 500; //default to medium
   }
   pulseLength += trimPotValue;
   Serial.print("Pulse length set: ");
