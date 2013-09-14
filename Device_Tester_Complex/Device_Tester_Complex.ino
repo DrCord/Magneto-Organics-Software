@@ -11,7 +11,7 @@ int switchRead;                            // for reading switch status, HIGH ==
 int switchReadVerify;                      // for reading the delayed/debounced status
 int buttonState[5];                        // holds each button state
 int isRunning = 0;                         // is the machine running a pattern?
-int pulseLength = 1000;                    // pulse length in milliseconds
+int pulseLength = 400;                    // pulse length in milliseconds
 int pulsePins[5] = {8, 9, 10, 11, 12}; // output pulses connected to pins 8-12
 int readLED = 13;
 
@@ -37,7 +37,7 @@ void setup() {
 void loop(){
   //read the switches
   digitalWrite(readLED, HIGH);
-  delay(200);
+  delay(000);
   for(int i=0; i < numInput; i++){
     Serial.print("switch ");
     Serial.print(i+1);
@@ -61,7 +61,7 @@ void loop(){
     }
     digitalWrite(readLED, LOW);
     Serial.print("\n");
-    delay(200);
+    delay(00);
   }
   //activate each triggered switch
   for(int j=0; j < numInput; j++){
@@ -76,6 +76,7 @@ void loop(){
       else{
         isRunning = 1;
         outputPulsePattern();                         //output pulse program
+        outputPulsePatternReverse();
         isRunning = 0;
       }     
       buttonState[j] == 0;                            // set switch as not pressed
@@ -83,7 +84,7 @@ void loop(){
     Serial.print("\n");
   }
   Serial.print("\n");
-  delay(100);
+  delay(000);
 }
 
 int outputSinglePulse(int pin){  
@@ -98,6 +99,14 @@ void outputPulsePattern(){
   Serial.println("Starting pulse pattern.");
   //cycle each pulse pin
   for(int i=0; i < numOutput; i++){
+    outputSinglePulse(pulsePins[i]);
+  }
+}
+
+void outputPulsePatternReverse(){
+  Serial.println("Starting reverse pulse pattern.");
+  //cycle each pulse pin
+  for(int i=numOutput-1; i >=   0; i--){
     outputSinglePulse(pulsePins[i]);
   }
 }
