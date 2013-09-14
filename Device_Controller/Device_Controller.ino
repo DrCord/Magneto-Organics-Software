@@ -2,7 +2,7 @@
  *  Magneto Organics Electromagnetic Particle Controller Software
  *  For controlling 4 electromagnetic coils
  *  By Cord Slatton-Valle
- *  Version 0.3
+ *  Version 0.
  */
  
 int switchRun = 2;                     // on/off switch on pin 2
@@ -120,6 +120,10 @@ void outputPulsePattern(){
   Serial.println("Starting pulse pattern.");
   //cycle each pulse pin
   for(int i=0; i < numOutput; i++){
+    outputSinglePulse(pulsePins[i]);
+  }
+  //reverse cycle each pulse pin
+  for(int i=numOutput-1; i >= 0; i--){
     outputSinglePulse(pulsePins[i]);
   }
   digitalWrite(runLED, LOW);
